@@ -50,8 +50,9 @@ if "app_data" not in st.session_state:
     st.session_state.app_data = load_data()
 
 def get_now_wib():
-    # Use UTC time and add 7 hours for WIB (Waktu Indonesia Barat)
-    return datetime.datetime.utcnow() + datetime.timedelta(hours=7)
+    # Use timezone-aware datetime for WIB (Waktu Indonesia Barat)
+    timezone_wib = datetime.timezone(datetime.timedelta(hours=7))
+    return datetime.datetime.now(timezone_wib)
 
 def get_today_name():
     today = get_now_wib().strftime("%A")
@@ -146,7 +147,8 @@ def calculate_timeline(settings, hari):
 # ==========================================
 def render_countdown(end_time, title, subtitle):
     now = get_now_wib()
-    end_datetime = datetime.datetime.combine(now.date(), end_time)
+    timezone_wib = datetime.timezone(datetime.timedelta(hours=7))
+    end_datetime = datetime.datetime.combine(now.date(), end_time, tzinfo=timezone_wib)
     
     if end_datetime < now:
         end_datetime += datetime.timedelta(days=1)
