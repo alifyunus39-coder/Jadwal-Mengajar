@@ -49,8 +49,12 @@ def save_data(data):
 if "app_data" not in st.session_state:
     st.session_state.app_data = load_data()
 
+def get_now_wib():
+    # Use UTC time and add 7 hours for WIB (Waktu Indonesia Barat)
+    return datetime.datetime.utcnow() + datetime.timedelta(hours=7)
+
 def get_today_name():
-    today = datetime.datetime.now().strftime("%A")
+    today = get_now_wib().strftime("%A")
     days_map = {
         "Monday": "SENIN", "Tuesday": "SELASA", "Wednesday": "RABU",
         "Thursday": "KAMIS", "Friday": "JUMAT", "Saturday": "SABTU", "Sunday": "MINGGU"
@@ -141,7 +145,7 @@ def calculate_timeline(settings, hari):
 # KOMPONEN UI COUNTDOWN JS
 # ==========================================
 def render_countdown(end_time, title, subtitle):
-    now = datetime.datetime.now()
+    now = get_now_wib()
     end_datetime = datetime.datetime.combine(now.date(), end_time)
     
     if end_datetime < now:
@@ -213,7 +217,7 @@ with tab_utama:
     if not blocks:
         st.warning("Belum ada pengaturan jadwal.")
     else:
-        now_time = datetime.datetime.now().time()
+        now_time = get_now_wib().time()
         # test_time = st.time_input("Simulasi Jam (Hanya untuk testing)", now_time)
         # now_time = test_time
         
