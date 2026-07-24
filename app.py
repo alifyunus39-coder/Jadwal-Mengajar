@@ -275,7 +275,8 @@ with tab_utama:
         st.markdown("---")
         st.subheader(f"Rincian Jadwal Hari {pilih_hari}")
         display_data = []
-        for b in blocks:
+        active_index = -1
+        for idx, b in enumerate(blocks):
             jam_str = ", ".join(str(x) for x in b['jam_ke']) if b['jam_ke'] else "Istirahat"
             display_data.append({
                 "Jam Ke": jam_str,
@@ -283,7 +284,17 @@ with tab_utama:
                 "Status": b['status'],
                 "Pelajaran": b['mapel']
             })
-        st.table(pd.DataFrame(display_data))
+            if b['start'] <= now_time <= b['end']:
+                active_index = idx
+                
+        df = pd.DataFrame(display_data)
+        
+        def highlight_active(row):
+            if row.name == active_index:
+                return ['background-color: #ffebee; color: #c62828; font-weight: bold'] * len(row)
+            return [''] * len(row)
+            
+        st.table(df.style.apply(highlight_active, axis=1))
 
 # ------------------------------------------
 # TAB 2: EDIT JADWAL
