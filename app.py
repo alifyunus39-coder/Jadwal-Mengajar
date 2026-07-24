@@ -156,11 +156,11 @@ def render_countdown(end_time, title, subtitle):
     end_timestamp = int(end_datetime.timestamp() * 1000)
     
     html = f"""
-    <div style="font-family: -apple-system, BlinkMacSystemFont, sans-serif; text-align: center; padding: 30px; background: white; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-        <h2 style="color: #8D6E63; margin-bottom: 5px; font-weight: 500;">{title}</h2>
-        <h4 style="color: #9e9e9e; margin-top: 0; font-weight: normal;">{subtitle}</h4>
-        <div id="countdown" style="font-size: 3.5rem; font-weight: 300; color: #5D4037; margin: 20px 0;">-- : -- : --</div>
-        <div style="color: #757575; font-size: 1.1rem;">
+    <div style="font-family: -apple-system, BlinkMacSystemFont, sans-serif; text-align: center; padding: 40px 20px; background: white; border-radius: 20px; box-shadow: 0 8px 16px rgba(0,0,0,0.1);">
+        <h1 style="color: #4E342E; margin-bottom: 10px; font-weight: 800; font-size: 4rem; line-height: 1.2;">{title}</h1>
+        <h3 style="color: #757575; margin-top: 0; font-weight: 500; font-size: 1.5rem;">{subtitle}</h3>
+        <div id="countdown" style="font-size: 6rem; font-weight: bold; color: #3E2723; margin: 30px 0; letter-spacing: -2px;">-- : -- : --</div>
+        <div style="color: #757575; font-size: 1.2rem; font-weight: 500;">
             ⏳ <span id="status">menghitung...</span>
         </div>
     </div>
@@ -196,7 +196,7 @@ def render_countdown(end_time, title, subtitle):
         }}, 1000);
     </script>
     """
-    components.html(html, height=300)
+    components.html(html, height=450)
 
 # ==========================================
 # TAMPILAN UTAMA APLIKASI
