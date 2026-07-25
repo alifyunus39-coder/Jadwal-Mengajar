@@ -40,6 +40,37 @@ def load_data():
                 return json.load(f)
         except:
             pass
+            
+    # Jika JSON belum ada, cek apakah ada file Excel. Jika ada, jadikan data awal.
+    excel_file = "Jadwal_Lengkap_dan_Kosong_Ust_Yunus.xlsx"
+    if os.path.exists(excel_file):
+        try:
+            import pandas as pd
+            df = pd.read_excel(excel_file, skiprows=2)
+            data = default_data()
+            
+            for index, row in df.iterrows():
+                hari = str(row.iloc[0]).strip().upper()
+                jam_ke = str(row.iloc[1]).strip()
+                status = str(row.iloc[3]).strip()
+                mapel = str(row.iloc[4]).strip()
+
+                if hari in data["schedule"] and jam_ke.isdigit():
+                    if mapel.lower() == 'nan': mapel = "Kosong"
+                    if status.lower() == 'nan': status = "KOSONG"
+                    if status.lower() == "mengajar": status = "Mengajar"
+                    else: status = "KOSONG"
+                        
+                    data["schedule"][hari][jam_ke] = {"mapel": mapel, "status": status}
+            
+            # Simpan hasilnya ke json lokal (sementara)
+            with open(DATA_FILE, "w") as f:
+                json.dump(data, f, indent=4)
+            return data
+        except Exception as e:
+            st.error(f"Gagal membaca Excel: {e}")
+            pass
+            
     return default_data()
 
 def save_data(data):
@@ -314,29 +345,49 @@ with tab_jadwal:
         if str(i) not in st.session_state.app_data["schedule"][hari_edit]:
             st.session_state.app_data["schedule"][hari_edit][str(i)] = {"mapel": "Kosong", "status": "KOSONG"}
 
-    with st.form("form_jadwal"):
-        for i in range(1, max_p + 1):
-            col1, col2 = st.columns([3, 1])
-            curr_mapel = st.session_state.app_data["schedule"][hari_edit][str(i)]["mapel"]
-            curr_status = st.session_state.app_data["schedule"][hari_edit][str(i)]["status"]
-            
-            with col1:
-                new_mapel = st.text_input(f"Pelajaran Jam ke-{i}", value=curr_mapel, key=f"mapel_{hari_edit}_{i}")
-            with col2:
-                new_status = st.selectbox(f"Status", ["Mengajar", "KOSONG"], index=0 if curr_status=="Mengajar" else 1, key=f"status_{hari_edit}_{i}")
-            
-            # Simpan sementara di session state saat form disubmit nanti
+    # Ambil semua pelajaran unik yang pernah dimasukkan
+    unique_mapels = set()
+    for h in st.session_state.app_data["schedule"]:
+        for p in st.session_state.app_data["schedule"][h]:
+            m = st.session_state.app_data["schedule"][h][p].get("mapel", "")
+            if m and m.lower() != "kosong":
+                unique_mapels.add(m)
+    
+    list_mapel = ["Kosong", "➕ Pelajaran Baru..."] + sorted(list(unique_mapels))
+
+    for i in range(1, max_p + 1):
+        col1, col2 = st.columns([3, 1])
+        curr_mapel = st.session_state.app_data["schedule"][hari_edit][str(i)]["mapel"]
+        curr_status = st.session_state.app_data["schedule"][hari_edit][str(i)]["status"]
         
-        submitted = st.form_submit_button("💾 Simpan Jadwal")
-        if submitted:
-            for i in range(1, max_p + 1):
-                m = st.session_state[f"mapel_{hari_edit}_{i}"]
-                s = st.session_state[f"status_{hari_edit}_{i}"]
-                st.session_state.app_data["schedule"][hari_edit][str(i)] = {"mapel": m, "status": s}
+        if curr_mapel not in list_mapel:
+            list_mapel.append(curr_mapel)
             
-            save_data(st.session_state.app_data)
-            st.success("Jadwal berhasil disimpan!")
-            st.rerun()
+        with col1:
+            pilih = st.selectbox(f"Pelajaran Jam ke-{i}", list_mapel, index=list_mapel.index(curr_mapel), key=f"sel_mapel_{hari_edit}_{i}")
+            if pilih == "➕ Pelajaran Baru...":
+                m_val = st.text_input(f"Ketik Pelajaran Baru Jam ke-{i}", key=f"txt_mapel_{hari_edit}_{i}")
+            else:
+                m_val = pilih
+                
+        with col2:
+            s_val = st.selectbox(f"Status Jam {i}", ["Mengajar", "KOSONG"], index=0 if curr_status=="Mengajar" else 1, key=f"status_{hari_edit}_{i}")
+            
+        # Simpan nilai sementara ke session state untuk disimpan saat tombol diklik
+        st.session_state[f"final_mapel_{hari_edit}_{i}"] = m_val
+        st.session_state[f"final_status_{hari_edit}_{i}"] = s_val
+
+    submitted = st.button("💾 Simpan Jadwal")
+    if submitted:
+        for i in range(1, max_p + 1):
+            m = st.session_state.get(f"final_mapel_{hari_edit}_{i}", "Kosong")
+            s = st.session_state.get(f"final_status_{hari_edit}_{i}", "KOSONG")
+            if not m or not m.strip():
+                m = "Kosong"
+            st.session_state.app_data["schedule"][hari_edit][str(i)] = {"mapel": m, "status": s}
+        
+        save_data(st.session_state.app_data)
+        st.success("Jadwal berhasil disimpan!")
 
 # ------------------------------------------
 # TAB 3: PENGATURAN & BACKUP
@@ -384,32 +435,80 @@ with tab_pengaturan:
             }
             save_data(st.session_state.app_data)
             st.success("Pengaturan waktu berhasil disimpan!")
-            st.rerun()
 
     st.markdown("---")
-    st.subheader("💾 Backup Data (Khusus Web Streamlit)")
+    st.subheader("💾 Backup & Import Data")
     st.info("Karena aplikasi web gratis bisa ter-reset (sleep), silakan Download Data ini secara berkala dan Upload kembali jika data hilang.")
     
     col_d, col_u = st.columns(2)
     with col_d:
         json_string = json.dumps(st.session_state.app_data, indent=4)
         st.download_button(
-            label="⬇️ Download Data Backup",
+            label="⬇️ Download Data Backup (JSON)",
             file_name="jadwal_backup.json",
             mime="application/json",
             data=json_string
         )
+        
+        import io
+        template_df = pd.DataFrame({
+            "Hari": ["SENIN"]*9 + ["SELASA"]*9 + ["RABU"]*9 + ["KAMIS"]*9 + ["JUMAT"]*9 + ["SABTU"]*9 + ["MINGGU"]*9,
+            "Jam Ke": [str(i) for i in range(1, 10)] * 7,
+            "Status": ["KOSONG"] * 63,
+            "Pelajaran": ["Kosong"] * 63
+        })
+        buffer = io.BytesIO()
+        template_df.to_excel(buffer, index=False)
+        st.download_button(
+            label="⬇️ Download Template Kosong (Excel)",
+            data=buffer.getvalue(),
+            file_name="Template_Jadwal_Kosong.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+
     with col_u:
-        uploaded_file = st.file_uploader("⬆️ Upload Data Backup", type="json")
+        uploaded_file = st.file_uploader("⬆️ Upload File (JSON / Excel)", type=["json", "xlsx"])
         if uploaded_file is not None:
-            try:
-                data = json.load(uploaded_file)
-                if "settings" in data and "schedule" in data:
+            if uploaded_file.name.endswith(".json"):
+                try:
+                    data = json.load(uploaded_file)
+                    if "settings" in data and "schedule" in data:
+                        st.session_state.app_data = data
+                        save_data(data)
+                        st.success("Backup JSON berhasil di-restore!")
+                    else:
+                        st.error("Format file JSON tidak valid.")
+                except Exception as e:
+                    st.error(f"Gagal membaca file JSON: {e}")
+            elif uploaded_file.name.endswith(".xlsx"):
+                try:
+                    df = pd.read_excel(uploaded_file)
+                    if "Hari" not in df.columns:
+                        df = pd.read_excel(uploaded_file, skiprows=2)
+                    
+                    data = st.session_state.app_data # Pertahankan pengaturan, perbarui jadwal
+                    
+                    for index, row in df.iterrows():
+                        hari_col = "Hari" if "Hari" in df.columns else df.columns[0]
+                        jam_col = "Jam Ke" if "Jam Ke" in df.columns else df.columns[1]
+                        status_col = "Status" if "Status" in df.columns else df.columns[3]
+                        mapel_col = "Pelajaran" if "Pelajaran" in df.columns else df.columns[4]
+                            
+                        hari = str(row[hari_col]).strip().upper()
+                        jam_ke = str(row[jam_col]).strip()
+                        status = str(row[status_col]).strip()
+                        mapel = str(row[mapel_col]).strip()
+                        
+                        if hari in data["schedule"] and jam_ke.isdigit():
+                            if mapel.lower() == 'nan': mapel = "Kosong"
+                            if status.lower() == 'nan': status = "KOSONG"
+                            if status.lower() == "mengajar": status = "Mengajar"
+                            else: status = "KOSONG"
+                                
+                            data["schedule"][hari][jam_ke] = {"mapel": mapel, "status": status}
+                    
                     st.session_state.app_data = data
                     save_data(data)
-                    st.success("Backup berhasil di-restore!")
-                    st.rerun()
-                else:
-                    st.error("Format file tidak valid.")
-            except Exception as e:
-                st.error(f"Gagal membaca file: {e}")
+                    st.success("Data dari Excel berhasil di-import!")
+                except Exception as e:
+                    st.error(f"Gagal membaca Excel: {e}")

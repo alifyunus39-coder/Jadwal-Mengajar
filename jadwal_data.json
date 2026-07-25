@@ -1,0 +1,287 @@
+{
+    "settings": {
+        "start_time": "07:00",
+        "period_duration": 35,
+        "max_periods": 9,
+        "breaks": [
+            {
+                "after_period": 3,
+                "duration": 30,
+                "name": "Istirahat 1"
+            },
+            {
+                "after_period": 7,
+                "duration": 65,
+                "name": "Istirahat 2"
+            }
+        ]
+    },
+    "schedule": {
+        "SENIN": {
+            "1": {
+                "mapel": "5C (TIK)",
+                "status": "Mengajar"
+            },
+            "2": {
+                "mapel": "5C (TIK)",
+                "status": "Mengajar"
+            },
+            "3": {
+                "mapel": "4A (Bahasa Indonesia)",
+                "status": "Mengajar"
+            },
+            "4": {
+                "mapel": "4A (BAQ / Tahfidz)",
+                "status": "Mengajar"
+            },
+            "5": {
+                "mapel": "4A (BAQ / Tahfidz)",
+                "status": "Mengajar"
+            },
+            "6": {
+                "mapel": "4A (Bahasa Indonesia)",
+                "status": "Mengajar"
+            },
+            "7": {
+                "mapel": "4A (Bahasa Indonesia)",
+                "status": "Mengajar"
+            },
+            "8": {
+                "mapel": "5D (TIK)",
+                "status": "Mengajar"
+            },
+            "9": {
+                "mapel": "5D (TIK)",
+                "status": "Mengajar"
+            }
+        },
+        "SELASA": {
+            "1": {
+                "mapel": "6A (TIK)",
+                "status": "Mengajar"
+            },
+            "2": {
+                "mapel": "6A (TIK)",
+                "status": "Mengajar"
+            },
+            "3": {
+                "mapel": "Jam Kosong / Free",
+                "status": "KOSONG"
+            },
+            "4": {
+                "mapel": "4A (BAQ / Tahfidz)",
+                "status": "Mengajar"
+            },
+            "5": {
+                "mapel": "4A (BAQ / Tahfidz)",
+                "status": "Mengajar"
+            },
+            "6": {
+                "mapel": "Jam Kosong / Free",
+                "status": "KOSONG"
+            },
+            "7": {
+                "mapel": "Jam Kosong / Free",
+                "status": "KOSONG"
+            },
+            "8": {
+                "mapel": "Ekskul",
+                "status": "KOSONG"
+            },
+            "9": {
+                "mapel": "Ekskul",
+                "status": "KOSONG"
+            }
+        },
+        "RABU": {
+            "1": {
+                "mapel": "6D (TIK)",
+                "status": "Mengajar"
+            },
+            "2": {
+                "mapel": "6D (TIK)",
+                "status": "Mengajar"
+            },
+            "3": {
+                "mapel": "Jam Kosong / Free",
+                "status": "KOSONG"
+            },
+            "4": {
+                "mapel": "4A (BAQ / Tahfidz)",
+                "status": "Mengajar"
+            },
+            "5": {
+                "mapel": "4A (BAQ / Tahfidz)",
+                "status": "Mengajar"
+            },
+            "6": {
+                "mapel": "6E (TIK)",
+                "status": "Mengajar"
+            },
+            "7": {
+                "mapel": "6E (TIK)",
+                "status": "Mengajar"
+            },
+            "8": {
+                "mapel": "6C (TIK)",
+                "status": "Mengajar"
+            },
+            "9": {
+                "mapel": "6C (TIK)",
+                "status": "Mengajar"
+            }
+        },
+        "KAMIS": {
+            "1": {
+                "mapel": "Jam Kosong / Free",
+                "status": "KOSONG"
+            },
+            "2": {
+                "mapel": "Jam Kosong / Free",
+                "status": "KOSONG"
+            },
+            "3": {
+                "mapel": "Jam Kosong / Free",
+                "status": "KOSONG"
+            },
+            "4": {
+                "mapel": "4A (BAQ / Tahfidz)",
+                "status": "Mengajar"
+            },
+            "5": {
+                "mapel": "4A (BAQ / Tahfidz)",
+                "status": "Mengajar"
+            },
+            "6": {
+                "mapel": "4A (IPAS)",
+                "status": "Mengajar"
+            },
+            "7": {
+                "mapel": "4A (IPAS)",
+                "status": "Mengajar"
+            },
+            "8": {
+                "mapel": "4A (PKN)",
+                "status": "Mengajar"
+            },
+            "9": {
+                "mapel": "4A (PKN)",
+                "status": "Mengajar"
+            }
+        },
+        "JUMAT": {
+            "1": {
+                "mapel": "Jam Kosong / Free",
+                "status": "KOSONG"
+            },
+            "2": {
+                "mapel": "6B (TIK)",
+                "status": "Mengajar"
+            },
+            "3": {
+                "mapel": "6B (TIK)",
+                "status": "Mengajar"
+            },
+            "4": {
+                "mapel": "4A (BAQ / Tahfidz)",
+                "status": "Mengajar"
+            },
+            "5": {
+                "mapel": "4A (BAQ / Tahfidz)",
+                "status": "Mengajar"
+            },
+            "6": {
+                "mapel": "4A (Bahasa Indonesia)",
+                "status": "Mengajar"
+            },
+            "7": {
+                "mapel": "4A (Bahasa Indonesia)",
+                "status": "Mengajar"
+            },
+            "8": {
+                "mapel": "4A (Bahasa Sunda)",
+                "status": "Mengajar"
+            },
+            "9": {
+                "mapel": "4A (IPAS)",
+                "status": "Mengajar"
+            }
+        },
+        "SABTU": {
+            "1": {
+                "mapel": "Kosong",
+                "status": "KOSONG"
+            },
+            "2": {
+                "mapel": "Kosong",
+                "status": "KOSONG"
+            },
+            "3": {
+                "mapel": "Kosong",
+                "status": "KOSONG"
+            },
+            "4": {
+                "mapel": "Kosong",
+                "status": "KOSONG"
+            },
+            "5": {
+                "mapel": "Kosong",
+                "status": "KOSONG"
+            },
+            "6": {
+                "mapel": "Kosong",
+                "status": "KOSONG"
+            },
+            "7": {
+                "mapel": "Kosong",
+                "status": "KOSONG"
+            },
+            "8": {
+                "mapel": "Kosong",
+                "status": "KOSONG"
+            },
+            "9": {
+                "mapel": "Kosong",
+                "status": "KOSONG"
+            }
+        },
+        "MINGGU": {
+            "1": {
+                "mapel": "Kosong",
+                "status": "KOSONG"
+            },
+            "2": {
+                "mapel": "Kosong",
+                "status": "KOSONG"
+            },
+            "3": {
+                "mapel": "Kosong",
+                "status": "KOSONG"
+            },
+            "4": {
+                "mapel": "Kosong",
+                "status": "KOSONG"
+            },
+            "5": {
+                "mapel": "Kosong",
+                "status": "KOSONG"
+            },
+            "6": {
+                "mapel": "Kosong",
+                "status": "KOSONG"
+            },
+            "7": {
+                "mapel": "Kosong",
+                "status": "KOSONG"
+            },
+            "8": {
+                "mapel": "Kosong",
+                "status": "KOSONG"
+            },
+            "9": {
+                "mapel": "Kosong",
+                "status": "KOSONG"
+            }
+        }
+    }
+}
