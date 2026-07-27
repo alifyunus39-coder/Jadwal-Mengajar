@@ -6,12 +6,12 @@
         "breaks": [
             {
                 "after_period": 3,
-                "duration": 30,
+                "duration": 35,
                 "name": "Istirahat 1"
             },
             {
                 "after_period": 7,
-                "duration": 65,
+                "duration": 70,
                 "name": "Istirahat 2"
             }
         ]
